@@ -7,10 +7,10 @@ const PINS = demoPins(12, 180);
 
 const REVEAL_STAGGER_MS = 70;
 const REVEAL_DURATION_MS = 400;
-const DISSOLVE_STAGGER_MS = 75;
-const DISSOLVE_HOLD_MS = 160;
-const DISSOLVE_DURATION_MS = 420;
-const LOOP_PAUSE_MS = 1800;
+const DISSOLVE_STAGGER_MS = 140;
+const DISSOLVE_HOLD_MS = 320;
+const DISSOLVE_DURATION_MS = 700;
+const LOOP_PAUSE_MS = 2200;
 
 const FLAGGED_ORDER = Array.from(FLAGGED_INDICES).sort((a, b) => a - b);
 
