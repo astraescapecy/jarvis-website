@@ -21,9 +21,7 @@ export default function HomePage() {
       <WaitlistForm />
 
       <section className="card">
-        <h2 style={{ margin: "0 0 12px", fontSize: "1.05rem" }}>
-          Early access includes
-        </h2>
+        <h2>Early access includes</h2>
         <ul className="bullets">
           <li>First invite when Jarvis launches on iOS</li>
           <li>Real-time AI pin filtering for your Pinterest account</li>
