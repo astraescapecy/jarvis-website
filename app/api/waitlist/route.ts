@@ -1,20 +1,19 @@
 import { NextResponse } from "next/server";
+import { isValidEmail } from "@/lib/klaviyo-subscribe";
 
-const KLAVIYO_API = "https://a.klaviyo.com/api/profile-subscription-bulk-create-jobs/";
-
-function isValidEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
+const KLAVIYO_API =
+  "https://a.klaviyo.com/api/profile-subscription-bulk-create-jobs/";
 
 export async function POST(request: Request) {
   const privateKey = process.env.KLAVIYO_PRIVATE_API_KEY;
-  const listId = process.env.KLAVIYO_LIST_ID;
+  const listId =
+    process.env.KLAVIYO_LIST_ID ?? process.env.NEXT_PUBLIC_KLAVIYO_LIST_ID;
 
   if (!privateKey || !listId) {
     return NextResponse.json(
       {
         error:
-          "Waitlist is not configured yet. Add KLAVIYO_PRIVATE_API_KEY and KLAVIYO_LIST_ID in Vercel.",
+          "Signups aren't live yet. Check back soon or email us on GitHub.",
       },
       { status: 503 },
     );

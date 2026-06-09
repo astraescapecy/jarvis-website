@@ -1,8 +1,15 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { isValidEmail, subscribeViaKlaviyoClient } from "@/lib/klaviyo-subscribe";
 
 type Status = "idle" | "loading" | "success" | "error";
+
+const SUCCESS_MESSAGE =
+  "You're on the list. We'll email you when Jarvis launches with early access.";
+
+const PUBLIC_KEY = process.env.NEXT_PUBLIC_KLAVIYO_PUBLIC_API_KEY;
+const LIST_ID = process.env.NEXT_PUBLIC_KLAVIYO_LIST_ID;
 
 export function WaitlistForm() {
   const [email, setEmail] = useState("");
@@ -14,31 +21,49 @@ export function WaitlistForm() {
     setStatus("loading");
     setMessage("");
 
+    const trimmed = email.trim().toLowerCase();
+    if (!isValidEmail(trimmed)) {
+      setStatus("error");
+      setMessage("Enter a valid email address.");
+      return;
+    }
+
     try {
-      const response = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim() }),
-      });
+      if (PUBLIC_KEY && LIST_ID) {
+        await subscribeViaKlaviyoClient(trimmed, PUBLIC_KEY, LIST_ID);
+      } else {
+        const response = await fetch("/api/waitlist", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: trimmed }),
+        });
 
-      const data = (await response.json()) as { message?: string; error?: string };
+        const data = (await response.json()) as {
+          message?: string;
+          error?: string;
+        };
 
-      if (!response.ok) {
-        throw new Error(data.error ?? "Something went wrong. Try again.");
+        if (!response.ok) {
+          throw new Error(
+            data.error ?? "Could not join the waitlist. Please try again.",
+          );
+        }
+
+        setMessage(data.message ?? SUCCESS_MESSAGE);
+        setStatus("success");
+        setEmail("");
+        return;
       }
 
       setStatus("success");
-      setMessage(
-        data.message ??
-          "You're on the list. We'll email you when Jarvis launches.",
-      );
+      setMessage(SUCCESS_MESSAGE);
       setEmail("");
     } catch (error) {
       setStatus("error");
       setMessage(
         error instanceof Error
           ? error.message
-          : "Something went wrong. Try again.",
+          : "Could not join the waitlist. Please try again.",
       );
     }
   }
