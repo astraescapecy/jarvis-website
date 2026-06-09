@@ -27,9 +27,111 @@ body {
 }
 
 body {
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(229, 9, 20, 0.18), transparent),
-    var(--black);
+  background: var(--black);
+}
+
+.landing {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Photo grid — same Picsum seeds + FLAGGED badges as the app onboarding */
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(920px, 100vw);
+  height: min(560px, 72vh);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-background__masonry {
+  column-count: 4;
+  column-gap: 10px;
+  padding: 0 20px;
+  opacity: 0.34;
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.7) 35%,
+    rgba(0, 0, 0, 0.25) 62%,
+    transparent 88%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.7) 35%,
+    rgba(0, 0, 0, 0.25) 62%,
+    transparent 88%
+  );
+}
+
+.hero-pin {
+  position: relative;
+  break-inside: avoid;
+  margin-bottom: 10px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.hero-pin img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-pin--flagged::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(232, 124, 3, 0.38) 0%,
+    transparent 55%
+  );
+  pointer-events: none;
+}
+
+.hero-pin__badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #e87c03;
+  color: #000;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.66px;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.hero-background__fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.05) 0%,
+    rgba(0, 0, 0, 0.45) 45%,
+    rgba(0, 0, 0, 0.92) 78%,
+    #000 100%
+  );
+}
+
+.hero-background__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 85% 55% at 50% -8%,
+    rgba(229, 9, 20, 0.22),
+    transparent 68%
+  );
 }
 
 a {
@@ -42,6 +144,8 @@ a:hover {
 }
 
 .page {
+  position: relative;
+  z-index: 1;
   max-width: var(--max);
   margin: 0 auto;
   padding: 48px 24px 64px;

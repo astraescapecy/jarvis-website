@@ -1,8 +1,11 @@
+import { HeroBackground } from "@/components/hero-background";
 import { WaitlistForm } from "@/components/waitlist-form";
 
 export default function HomePage() {
   return (
-    <main className="page">
+    <div className="landing">
+      <HeroBackground />
+      <main className="page">
       <header className="hero">
         <div className="logo" aria-hidden="true">
           J
@@ -36,5 +39,6 @@ export default function HomePage() {
         <p>© {new Date().getFullYear()} Jarvis. Not affiliated with Pinterest.</p>
       </footer>
     </main>
+    </div>
   );
 }
