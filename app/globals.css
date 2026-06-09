@@ -76,6 +76,62 @@ body {
   border-radius: 20px;
   overflow: hidden;
   background: var(--surface);
+  opacity: 0;
+  transform: translateY(14px) scale(0.98);
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease,
+    max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    margin 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 480px;
+}
+
+.hero-pin--visible {
+  animation: hero-pin-reveal 400ms cubic-bezier(0.33, 1, 0.68, 1) both;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.hero-pin--dissolving {
+  animation: hero-pin-dissolve 700ms cubic-bezier(0.55, 0.06, 0.68, 0.19) both;
+}
+
+.hero-pin--gone {
+  opacity: 0 !important;
+  transform: translateY(28px) scale(0.9) !important;
+  max-height: 0 !important;
+  margin-bottom: 0 !important;
+  pointer-events: none;
+}
+
+@keyframes hero-pin-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes hero-pin-dissolve {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(26px) scale(0.92);
+    filter: blur(1.5px);
+  }
+}
+
+.hero-pin__media {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .hero-pin img {
@@ -85,7 +141,7 @@ body {
   object-fit: cover;
 }
 
-.hero-pin--flagged::after {
+.hero-pin--flagged .hero-pin__media::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -101,6 +157,7 @@ body {
   position: absolute;
   top: 8px;
   right: 8px;
+  z-index: 2;
   padding: 4px 8px;
   border-radius: 999px;
   background: #e87c03;
@@ -110,6 +167,63 @@ body {
   letter-spacing: 0.66px;
   line-height: 1;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.hero-pin__badge--pulse {
+  animation: hero-badge-pulse 320ms ease-out;
+}
+
+@keyframes hero-badge-pulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.hero-pin__mist {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(245, 245, 247, 0.28) 100%
+  );
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.hero-pin--dissolving .hero-pin__mist {
+  opacity: 1;
+  animation: hero-mist-wash 700ms cubic-bezier(0.55, 0.06, 0.68, 0.19) both;
+}
+
+@keyframes hero-mist-wash {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-pin,
+  .hero-pin--visible,
+  .hero-pin--dissolving {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+
+  .hero-pin--gone {
+    display: none;
+  }
 }
 
 .hero-background__fade {
@@ -132,6 +246,17 @@ body {
     rgba(229, 9, 20, 0.22),
     transparent 68%
   );
+  animation: hero-glow-breathe 8s ease-in-out infinite;
+}
+
+@keyframes hero-glow-breathe {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 a {
