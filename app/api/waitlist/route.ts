@@ -1,20 +1,18 @@
 import { NextResponse } from "next/server";
-import { isValidEmail } from "@/lib/klaviyo-subscribe";
-
-const KLAVIYO_API =
-  "https://a.klaviyo.com/api/profile-subscription-bulk-create-jobs/";
+import { isValidEmail, subscribeToWaitlist } from "@/lib/klaviyo-subscribe";
 
 export async function POST(request: Request) {
+  const publicKey =
+    process.env.KLAVIYO_PUBLIC_API_KEY ??
+    process.env.NEXT_PUBLIC_KLAVIYO_PUBLIC_API_KEY;
   const privateKey = process.env.KLAVIYO_PRIVATE_API_KEY;
   const listId =
     process.env.KLAVIYO_LIST_ID ?? process.env.NEXT_PUBLIC_KLAVIYO_LIST_ID;
 
-  if (!privateKey || !listId) {
+  if (!listId?.trim() || (!publicKey?.trim() && !privateKey?.trim())) {
+    console.error("Waitlist misconfigured: missing Klaviyo env vars");
     return NextResponse.json(
-      {
-        error:
-          "Signups aren't live yet. Check back soon or email us on GitHub.",
-      },
+      { error: "Signups aren't live yet. Check back soon." },
       { status: 503 },
     );
   }
@@ -34,51 +32,14 @@ export async function POST(request: Request) {
     );
   }
 
-  const klaviyoResponse = await fetch(KLAVIYO_API, {
-    method: "POST",
-    headers: {
-      Authorization: `Klaviyo-API-Key ${privateKey}`,
-      "Content-Type": "application/json",
-      revision: "2024-10-15",
-    },
-    body: JSON.stringify({
-      data: {
-        type: "profile-subscription-bulk-create-job",
-        attributes: {
-          custom_source: "Jarvis Waitlist",
-          profiles: {
-            data: [
-              {
-                type: "profile",
-                attributes: {
-                  email,
-                  subscriptions: {
-                    email: {
-                      marketing: {
-                        consent: "SUBSCRIBED",
-                      },
-                    },
-                  },
-                },
-              },
-            ],
-          },
-        },
-        relationships: {
-          list: {
-            data: {
-              type: "list",
-              id: listId,
-            },
-          },
-        },
-      },
-    }),
-  });
-
-  if (!klaviyoResponse.ok) {
-    const detail = await klaviyoResponse.text();
-    console.error("Klaviyo error:", klaviyoResponse.status, detail);
+  try {
+    await subscribeToWaitlist(email, {
+      publicApiKey: publicKey,
+      privateApiKey: privateKey,
+      listId,
+    });
+  } catch (error) {
+    console.error("Waitlist subscribe failed:", error);
     return NextResponse.json(
       { error: "Could not join the waitlist. Please try again." },
       { status: 502 },
