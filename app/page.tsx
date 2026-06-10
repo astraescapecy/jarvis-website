@@ -1,4 +1,5 @@
 import { HeroBackground } from "@/components/hero-background";
+import { JarvisLogo } from "@/components/jarvis-logo";
 import { WaitlistForm } from "@/components/waitlist-form";
 
 export default function HomePage() {
@@ -7,9 +8,7 @@ export default function HomePage() {
       <HeroBackground />
       <main className="page">
       <header className="hero">
-        <div className="logo" aria-hidden="true">
-          J
-        </div>
+        <JarvisLogo className="logo" />
         <h1>Jarvis</h1>
         <p className="tagline">Your Pinterest feed, without AI slop.</p>
         <p className="lead">
