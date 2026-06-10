@@ -277,7 +277,16 @@ a:hover {
 }
 
 .logo {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  border: 2px solid var(--red);
+  color: var(--red);
+  font-size: 42px;
+  font-weight: 800;
   margin-bottom: 20px;
 }
 
