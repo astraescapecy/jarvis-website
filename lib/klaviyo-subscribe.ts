@@ -22,8 +22,9 @@ export async function subscribeViaKlaviyoClient(
     {
       method: "POST",
       headers: {
+        Accept: "application/vnd.api+json",
         "Content-Type": "application/vnd.api+json",
-        revision: "2024-07-15",
+        revision: "2026-01-15",
       },
       body: JSON.stringify({
         data: {
@@ -132,13 +133,18 @@ export async function subscribeToWaitlist(
   const publicKey = config.publicApiKey?.trim();
   const privateKey = config.privateApiKey?.trim();
 
-  if (publicKey) {
-    await subscribeViaKlaviyoClient(email, publicKey, listId);
-    return;
+  if (privateKey) {
+    try {
+      await subscribeViaKlaviyoPrivate(email, privateKey, listId);
+      return;
+    } catch (error) {
+      if (!publicKey) throw error;
+      console.warn("Klaviyo private key failed, falling back to public key:", error);
+    }
   }
 
-  if (privateKey) {
-    await subscribeViaKlaviyoPrivate(email, privateKey, listId);
+  if (publicKey) {
+    await subscribeViaKlaviyoClient(email, publicKey, listId);
     return;
   }
 

@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { isValidEmail, subscribeToWaitlist } from "@/lib/klaviyo-subscribe";
 
 export async function POST(request: Request) {
+  const privateKey = process.env.KLAVIYO_PRIVATE_API_KEY;
   const publicKey =
     process.env.KLAVIYO_PUBLIC_API_KEY ??
     process.env.NEXT_PUBLIC_KLAVIYO_PUBLIC_API_KEY;
-  const privateKey = process.env.KLAVIYO_PRIVATE_API_KEY;
   const listId =
     process.env.KLAVIYO_LIST_ID ?? process.env.NEXT_PUBLIC_KLAVIYO_LIST_ID;
 
